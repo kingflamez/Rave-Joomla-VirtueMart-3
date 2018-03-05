@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension method="upgrade" group="vmpayment" type="plugin" version="2.5">
+    <name>VM Payment - Rave</name>
+    <creationDate>March 2018</creationDate>
+    <author>Oluwole Adebiyi</author>
+    <authorUrl>https://github.com/kingflamez</authorUrl>
+    <copyright>Copyright (C) 2016 Oluwole Adebiyi. All rights reserved.</copyright>
+    <license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+    <version>1.0.0</version>
+
+    <description>
+        <![CDATA[
+            	Accept payments through Direct Charge, Debit Cards and USSD. <a href="https://rave.flutterwave.com/" target="_blank">Click here to get a Rave account</a>.
+		]]>
+    </description>
+
+    <languages>
+        <language tag="en-GB">language/en-GB.plg_vmpayment_rave.ini</language>
+    </languages>
+
+    <files>
+        <folder>language</folder>
+        <filename plugin="rave">rave.php</filename>
+    </files>
+
+    <vmconfig>
+        <fields name="params">
+            <fieldset name="payment" addfieldpath="/plugins/vmpayment/rave/rave/fields">
+                <field name="test_mode"
+                       type="list"
+                       default="0"
+                       label="VMPAYMENT_RAVE_TEST_MODE_LBL"
+                       description="VMPAYMENT_RAVE_TEST_DESC">
+                    <option value="0">COM_VIRTUEMART_NO</option>
+                    <option value="1">COM_VIRTUEMART_YES</option>
+                </field>
+                <field type="vmtitle"
+                       description=""
+                       default="VMPAYMENT_RAVE_RAVE_CONF"/>
+                <field type="text"
+                       name="secret_key"
+                       description="VMPAYMENT_RAVE_SECRET_KEY_DESC"
+                       default=""
+                       label="VMPAYMENT_RAVE_SECRET_KEY_LBL"
+                       size="50"/>
+                <field type="text"
+                       name="public_key"
+                       description="VMPAYMENT_RAVE_PUBLIC_KEY_DESC"
+                       default=""
+                       label="VMPAYMENT_RAVE_PUBLIC_KEY_LBL"
+                       size="50"/>
+                <field type="text"
+                       name="logo"
+                       description="VMPAYMENT_RAVE_LOGO_DESC"
+                       default=""
+                       label="VMPAYMENT_RAVE_LOGO_LBL"
+                       size="50"/>
+                <field name="country"
+                       type="list"
+                       default="NG"
+                       label="VMPAYMENT_RAVE_COUNTRY_LBL"
+                       description="VMPAYMENT_RAVE_COUNTRY_DESC">
+                    <option value="NG">Nigeria</option>
+                    <option value="GH">Ghana</option>
+                    <option value="KE">Kenya</option>
+                </field>    
+                <field name="payment_method"
+                       type="list"
+                       default="both"
+                       label="VMPAYMENT_RAVE_PAYMENT_METHOD_LBL"
+                       description="VMPAYMENT_RAVE_PAYMENT_METHOD_DESC">
+                    <option value="both">All</option>
+                    <option value="card">Cards Only</option>
+                    <option value="account">Account Only</option>
+                    <option value="ussd">USSD Only</option>
+                </field>       
+            </fieldset>
+        </fields>
+    </vmconfig>
+
+    <updateservers>
+        <server type="extension" name="VirtueMart plg_vmpayment_rave Update Site">
+            <![CDATA[https://raw.githubusercontent.com/kingflamez/Rave-Joomla-VirtueMart-3/master/version.xml]]></server>
+    </updateservers>
+</extension>

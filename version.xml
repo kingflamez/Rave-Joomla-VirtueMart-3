@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+	<update>
+		<name>VM Payment - Rave</name>
+		<description>
+			<![CDATA[
+				Accept payments through Direct Charge, Debit Cards and USSD. <a href="https://rave.flutterwave.com/" target="_blank">Click here to get a Rave account</a>.
+			]]>
+		</description>
+		<element>rave</element>
+		<type>plugin</type>
+		<version>1.0.0</version>
+		<infourl title="VirtueMart URL">
+			https://github.com/kingflamez/Rave-Joomla-VirtueMart-3/releases/tag/1.0.0
+		</infourl>
+		<downloads>
+		<downloadurl type="upgrade" format="zip">
+			https://github.com/kingflamez/Rave-Joomla-VirtueMart-3/archive/1.0.0.zip
+		</downloadurl>
+		</downloads>
+		<maintainer>Oluwole Adebiyi</maintainer>
+		<maintainerurl>https://github.com/kingflamez</maintainerurl>
+	</update>
+<updates>
