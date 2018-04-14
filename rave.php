@@ -32,14 +32,22 @@ class plgVmPaymentRave extends vmPSPlugin
                 1,
                 'int'
             ), // rave.xml (test_mode)
-            'secret_key' => array(
+            'live_secret_key' => array(
                 '',
                 'char'
-            ), // rave.xml (secret_key)
-            'public_key' => array(
+            ), // rave.xml (live_secret_key)
+            'live_public_key' => array(
                 '',
                 'char'
-            ), // rave.xml (public_key)
+            ), // rave.xml (live_public_key)
+            'test_secret_key' => array(
+                '',
+                'char'
+            ), // rave.xml (test_secret_key)
+            'test_public_key' => array(
+                '',
+                'char'
+            ), // rave.xml (test_public_key)
             'logo' => array(
                 '',
                 'char'
@@ -121,19 +129,20 @@ class plgVmPaymentRave extends vmPSPlugin
         if ($rave_settings->test_mode) {
             $baseUrl = 'https://rave-api-v2.herokuapp.com';
             $apiLink = 'http://flw-pms-dev.eu-west-1.elasticbeanstalk.com/';
+            $secret_key = $rave_settings->test_secret_key;
+            $public_key = $rave_settings->test_public_key;
         } else {
             $baseUrl = 'https://api.ravepay.co';
             $apiLink = 'https://api.ravepay.co/';
+            $secret_key = $rave_settings->live_secret_key;
+            $public_key = $rave_settings->live_public_key;
         }
-
-        $secret_key = str_replace(' ', '', $secret_key);
-        $public_key = str_replace(' ', '', $public_key);
 
         return array(
             'baseUrl' => $baseUrl,
             'apiLink' => $apiLink,
-            'public_key' => $rave_settings->public_key,
-            'secret_key' => $rave_settings->secret_key,
+            'public_key' => $public_key,
+            'secret_key' => $secret_key,
             'logo' => $rave_settings->logo,
             'country' => $rave_settings->country,
             'payment_method' => $rave_settings->payment_method
@@ -224,11 +233,11 @@ class plgVmPaymentRave extends vmPSPlugin
         // Get payment currency
         $this->getPaymentCurrency($method);
         $db = JFactory::getDbo();
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('currency_code_3'))
-            ->from($db->quoteName('#__virtuemart_currencies'))
-            ->where($db->quoteName('virtuemart_currency_id')
-                . ' = ' . $db->quote('\'' . $method->payment_currency . '\''));
+        $query = $db->getQuery(true);
+        $query->select('currency_code_3');
+        $query->from($db->quoteName('#__virtuemart_currencies'));
+        $query->where($db->quoteName('virtuemart_currency_id')
+                . ' = ' . $db->quote($method->payment_currency));
         $db->setQuery($query);
         $currency_code = $db->loadResult();
 
@@ -280,16 +289,14 @@ class plgVmPaymentRave extends vmPSPlugin
         array_push($meta, array('metaname' => 'amount', 'metavalue' => $rave->amount));
         $transactionData = array_merge($postfields, array('integrity_hash' => $hashedValue), array('meta' => $meta));
         $json = json_encode($transactionData);
-
+        
         // Rave Gateway HTML code
-        $html = "<form onsubmit='event.preventDefault(); pay();'>
-        <button type='submit' class='btn btn-primary' style='cursor:pointer;' value='Pay Now' id='ravepaybutton'>Pay with Rave</button>
-        </form>
+        $html = "
         <script type='text/javascript' src='" . $rave_settings['baseUrl'] . "/flwv3-pug/getpaidx/api/flwpbf-inline.js'></script>
         <script>
-        function pay() {
+        document . addEventListener('DOMContentLoaded', function (event) {
         var data = JSON.parse('" . json_encode($transactionData = array_merge($postfields, array('integrity_hash' => $hashedValue))) . "');
-        getpaidSetup(data);}
+        getpaidSetup(data);});
         </script>
         ";
 
@@ -355,7 +362,7 @@ class plgVmPaymentRave extends vmPSPlugin
             $order['customer_notified'] = 1;
             $orderModel->updateStatusForOneOrder($order['details']['BT']->virtuemart_order_id, $order, true);
 
-            $html .= $this->getHtmlRow('Total Amount', number_format($transData->amount / 100, 2));
+            $html .= $this->getHtmlRow('Total Amount', number_format($transData->amount, 2));
             $html .= $this->getHtmlRow('Status', $transData->status);
             $html .= '</table>' . "\n";
             // add order url
@@ -370,7 +377,7 @@ class plgVmPaymentRave extends vmPSPlugin
         } else if (property_exists($transData, 'error')) {
             die($transData->error);
         } else {
-            $html .= $this->getHtmlRow('Total Amount', number_format($transData->amount / 100, 2));
+            $html .= $this->getHtmlRow('Total Amount', number_format($transData->amount, 2));
             $html .= $this->getHtmlRow('Status', $transData->status);
             $html .= '</table>' . "\n";
             $html .= '<a href="' . JRoute::_('index.php?option=com_virtuemart&view=cart', false) . '" class="vm-button-correct">' . vmText::_('CART_PAGE') . '</a>';

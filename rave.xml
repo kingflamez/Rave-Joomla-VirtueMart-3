@@ -10,7 +10,28 @@
 
     <description>
         <![CDATA[
-            	Accept payments through Direct Charge, Debit Cards and USSD. <a href="https://rave.flutterwave.com/" target="_blank">Click here to get a Rave account</a>.
+                <div style="
+                    display: block;
+                    margin: 20px;
+                    padding: 20px;
+                    text-align: center;
+                ">
+                <img src="https://res.cloudinary.com/datablock123452018/image/upload/v1523744197/rave.png" style="height: 100px;
+                display: block;
+                margin: 5px auto 15px;"/>
+            	<p>Accept payments through Direct Charge, Debit Cards and USSD.</p> 
+                <p><a
+                    style="
+                        color: #f5a623;
+                        font-size: 1.4em;
+                    "
+                    href="https://rave.flutterwave.com/" target="_blank">Click here to get a Live Rave account</a>.</p> 
+                <p><a 
+                    style="
+                        color: #f5a623;
+                    "
+                href="https://raveappv2.herokuapp.com/" target="_blank">Click here to get a Test/Staging Rave account</a>.</p>
+                </div>
 		]]>
     </description>
 
@@ -38,16 +59,28 @@
                        description=""
                        default="VMPAYMENT_RAVE_RAVE_CONF"/>
                 <field type="text"
-                       name="secret_key"
-                       description="VMPAYMENT_RAVE_SECRET_KEY_DESC"
+                       name="live_secret_key"
+                       description="VMPAYMENT_RAVE_LIVE_SECRET_KEY_DESC"
                        default=""
-                       label="VMPAYMENT_RAVE_SECRET_KEY_LBL"
+                       label="VMPAYMENT_RAVE_LIVE_SECRET_KEY_LBL"
                        size="50"/>
                 <field type="text"
-                       name="public_key"
-                       description="VMPAYMENT_RAVE_PUBLIC_KEY_DESC"
+                       name="live_public_key"
+                       description="VMPAYMENT_RAVE_LIVE_PUBLIC_KEY_DESC"
                        default=""
-                       label="VMPAYMENT_RAVE_PUBLIC_KEY_LBL"
+                       label="VMPAYMENT_RAVE_LIVE_PUBLIC_KEY_LBL"
+                       size="50"/>
+                <field type="text"
+                       name="test_secret_key"
+                       description="VMPAYMENT_RAVE_TEST_SECRET_KEY_DESC"
+                       default=""
+                       label="VMPAYMENT_RAVE_TEST_SECRET_KEY_LBL"
+                       size="50"/>
+                <field type="text"
+                       name="test_public_key"
+                       description="VMPAYMENT_RAVE_TEST_PUBLIC_KEY_DESC"
+                       default=""
+                       label="VMPAYMENT_RAVE_TEST_PUBLIC_KEY_LBL"
                        size="50"/>
                 <field type="text"
                        name="logo"
