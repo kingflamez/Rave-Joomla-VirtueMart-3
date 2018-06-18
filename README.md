@@ -8,7 +8,7 @@ Rave for Joomla VirtueMart
 
 > Sign up for a `live` account [here](https://rave.flutterwave.com/)
 
-> Sign up for a `test` account [here](https://raveappv2.herokuapp.com/)
+> Sign up for a `test` account [here](https://ravesandbox.flutterwave.com/)
 
 ## Instructions
 1. Download the Zip Folder
