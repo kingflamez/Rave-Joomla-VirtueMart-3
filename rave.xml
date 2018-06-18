@@ -96,6 +96,7 @@
                     <option value="NG">Nigeria</option>
                     <option value="GH">Ghana</option>
                     <option value="KE">Kenya</option>
+                    <option value="ZA">South Africa</option>
                 </field>    
                 <field name="payment_method"
                        type="list"
