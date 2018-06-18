@@ -127,8 +127,8 @@ class plgVmPaymentRave extends vmPSPlugin
         $rave_settings = $this->getPluginMethod($payment_method_id);
 
         if ($rave_settings->test_mode) {
-            $baseUrl = 'https://rave-api-v2.herokuapp.com';
-            $apiLink = 'http://flw-pms-dev.eu-west-1.elasticbeanstalk.com/';
+            $baseUrl = 'https://ravesandboxapi.flutterwave.com';
+            $apiLink = 'https://ravesandboxapi.flutterwave.com/';
             $secret_key = $rave_settings->test_secret_key;
             $public_key = $rave_settings->test_public_key;
         } else {
@@ -170,7 +170,7 @@ class plgVmPaymentRave extends vmPSPlugin
 	    // make request to endpoint.
         $data_string = json_encode($data);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $apiLink . 'flwv3-pug/getpaidx/api/xrequery');
+        curl_setopt($ch, CURLOPT_URL, $apiLink . 'flwv3-pug/getpaidx/api/v2/verify');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
