@@ -52,6 +52,22 @@ class plgVmPaymentRave extends vmPSPlugin
                 '',
                 'char'
             ), // rave.xml (logo)
+            'title' => array(
+                '',
+                'char'
+            ), // rave.xml (title)
+            'description' => array(
+                '',
+                'char'
+            ), // rave.xml (description)
+            'metaname' => array(
+                '',
+                'char'
+            ), // rave.xml (metaname)
+            'metavalue' => array(
+                '',
+                'char'
+            ), // rave.xml (metavalue)
             'country' => array(
                 '',
                 'char'
@@ -144,8 +160,13 @@ class plgVmPaymentRave extends vmPSPlugin
             'public_key' => $public_key,
             'secret_key' => $secret_key,
             'logo' => $rave_settings->logo,
+            'title' => $rave_settings->title,
+            'description' => $rave_settings->description,
+            'metaname' => $rave_settings->metaname,
+            'metavalue' => $rave_settings->metavalue,
             'country' => $rave_settings->country,
             'payment_method' => $rave_settings->payment_method
+            
         );
     }
 
@@ -211,7 +232,7 @@ class plgVmPaymentRave extends vmPSPlugin
     }
 
     function plgVmConfirmedOrder($cart, $order)
-    {
+    {   
         if (!($method = $this->getVmPluginMethod($order['details']['BT']->virtuemart_paymentmethod_id))) {
             return null;
         }
@@ -258,20 +279,40 @@ class plgVmPaymentRave extends vmPSPlugin
         $this->storePSPluginInternalData($dbValues);
 
         // Redirect URL - Requery Rave payment
+        // $redirect_url = JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id . '&Itemid=' . vRequest::getInt('Itemid') . '&lang=' . vRequest::getCmd('lang', '');
         $redirect_url = JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id . '&Itemid=' . vRequest::getInt('Itemid') . '&lang=' . vRequest::getCmd('lang', '');
 
         // Rave Settings
         $payment_method_id = $dbValues['virtuemart_paymentmethod_id'];//vRequest::getInt('virtuemart_paymentmethod_id');
         $rave_settings = $this->getRaveSettings($payment_method_id);
 
+        // Get the country
+        switch ($currency_code) {
+            case 'KES':
+                $country = 'KE';
+                break;
+            case 'GHS':
+                $country = 'GH';
+                break;
+            case 'ZAR':
+                $country = 'ZA';
+                break;
+            
+            default:
+                $country = 'NG';
+                break;
+        }
+        
         $postfields = array();
         $postfields['PBFPubKey'] = $rave_settings['public_key'];
         $postfields['customer_email'] = $order_info->email;
         $postfields['customer_firstname'] = $order_info->firstname;
         $postfields['custom_logo'] = $rave_settings['logo'];
+        $postfields['custom_title'] = $rave_settings['title'];
+        $postfields['custom_description'] = $rave_settings['description'];
         $postfields['customer_lastname'] = $order_info->lastname;
         $postfields['customer_phone'] = $order_info->phone;
-        $postfields['country'] = $rave_settings['country'];
+        $postfields['country'] = $country; //$rave_settings['country'];
         $postfields['redirect_url'] = $redirect_url;
         $postfields['txref'] = $dbValues['rave_transaction_reference'];
         $postfields['payment_method'] = $rave_settings['payment_method'];
@@ -286,8 +327,8 @@ class plgVmPaymentRave extends vmPSPlugin
         $stringToHash .= $rave_settings['secret_key'];
         $hashedValue = hash('sha256', $stringToHash);
         $meta = array();
-        array_push($meta, array('metaname' => 'amount', 'metavalue' => $rave->amount));
-        $transactionData = array_merge($postfields, array('integrity_hash' => $hashedValue), array('meta' => $meta));
+        array_push($meta, array('metaname' => $rave_settings['metaname'], 'metavalue' => $rave_settings['metavalue']));
+        $transactionData = array_merge($postfields, array('integrity_hash' => $hashedValue));
         $json = json_encode($transactionData);
         
         // Rave Gateway HTML code
@@ -295,7 +336,7 @@ class plgVmPaymentRave extends vmPSPlugin
         <script type='text/javascript' src='" . $rave_settings['baseUrl'] . "/flwv3-pug/getpaidx/api/flwpbf-inline.js'></script>
         <script>
         document . addEventListener('DOMContentLoaded', function (event) {
-        var data = JSON.parse('" . json_encode($transactionData = array_merge($postfields, array('integrity_hash' => $hashedValue))) . "');
+        var data = JSON.parse('" . json_encode($transactionData = array_merge($postfields, array('integrity_hash' => $hashedValue), array('meta' => $meta))) . "');
         getpaidSetup(data);});
         </script>
         ";
